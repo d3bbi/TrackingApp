@@ -1,5 +1,7 @@
 <resources>
-    <string name="app_name">DeborahRimei_3015579_TrackingApp</string>
+    <string name="app_name">Tracking app</string>
     <string name="today_s_habit">Today\'s Habit</string>
     <string name="new_task">New Task</string>
+    <string name="habit_name">Habit name</string>
+    <string name="save">Save</string>
 </resources>
