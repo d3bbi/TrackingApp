@@ -6,54 +6,54 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:layout_marginHorizontal="18dp"
-    tools:context=".PrimaryActivity">
+    tools:context=".InitialActivity">
 
     <TextView
-        android:id="@+id/primary_tv_title"
+        android:id="@+id/initial_tv_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Welcome"
         android:textSize="50dp" />
 
     <TextView
-        android:id="@+id/primary_tv_Intro"
+        android:id="@+id/initial_tv_intro"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/primary_tv_title"
+        android:layout_below="@id/initial_tv_title"
         android:text="Even a small habit can make a huge impact in our life."
         android:textSize="25dp" />
 
     <EditText
-        android:id="@+id/primary_et_name"
+        android:id="@+id/initial_et_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/primary_tv_Intro"
+        android:layout_below="@id/initial_tv_intro"
         android:layout_marginVertical="10dp"
         android:hint="Enter your name"
         android:textSize="25dp" />
 
     <TextView
-        android:id="@+id/primary_tv_identity"
+        android:id="@+id/initial_tv_identity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/primary_et_name"
+        android:layout_below="@id/initial_et_name"
         android:layout_marginVertical="15dp"
         android:text="The most effective way to change your habits is to focus on who you wish to become, not on what you want to achieve. Make the habit part of your new identity.
 "
         android:textSize="20dp" />
 
     <EditText
-        android:id="@+id/primary_et_identity"
+        android:id="@+id/initiail_et_identity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/primary_tv_identity"
+        android:layout_below="@id/initial_tv_identity"
         android:hint="Who do you want to be?"
         android:textSize="25dp" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/primary_et_identity"
+        android:layout_below="@id/initiail_et_identity"
         android:id="@+id/primary_button"
         android:text="Start journey"
         android:layout_centerInParent="true"

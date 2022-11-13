@@ -8,15 +8,15 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 
-class PrimaryActivity : AppCompatActivity() {
+class InitialActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_primary)
+        setContentView(R.layout.activity_initial)
 
         // retrieve all edit texts and buttons from the layout
-        var primary_name: EditText = findViewById(R.id.primary_et_name)
-        var primary_identity : EditText = findViewById(R.id.primary_et_identity)
-        var primary_button: Button = findViewById(R.id.primary_button)
+        var initial_name: EditText = findViewById(R.id.initial_et_name)
+        var initial_identity : EditText = findViewById(R.id.initiail_et_identity)
+        var initial_button: Button = findViewById(R.id.primary_button)
 
         //create new SharedPreferences
         var preferences: SharedPreferences = getSharedPreferences("PREFERENCE", MODE_PRIVATE)
@@ -24,7 +24,7 @@ class PrimaryActivity : AppCompatActivity() {
 
         // if the primary activity has already been viewed, run this code
         if (firstTime.equals("Yes")) {
-            Intent(this@PrimaryActivity, MainActivity::class.java).also {
+            Intent(this@InitialActivity, MainActivity::class.java).also {
                 startActivity(it)
                 finish()
             }
@@ -35,14 +35,14 @@ class PrimaryActivity : AppCompatActivity() {
             editor.apply()
 
             //when the button is clicked, the next activity will be displayed (Main)
-            primary_button.setOnClickListener {
-                val msg: String = primary_name.text.toString()
+            initial_button.setOnClickListener {
+                val msg: String = initial_name.text.toString()
 
                 //if the EditText are not empty, pass the message in the SharedPreferences
                 if (msg.trim().isNotBlank() || msg.trim().isNotEmpty()) {
-                    Intent(this@PrimaryActivity, MainActivity::class.java).also {
-                        editor.putString("UserName", primary_name.text.toString())
-                        editor.putString("Identity", primary_identity.text.toString())
+                    Intent(this@InitialActivity, MainActivity::class.java).also {
+                        editor.putString("Username", initial_name.text.toString())
+                        editor.putString("Identity", initial_identity.text.toString())
                         editor.commit()
                         startActivity(it)
                         finish()
