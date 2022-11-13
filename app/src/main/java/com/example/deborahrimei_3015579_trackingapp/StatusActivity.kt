@@ -5,16 +5,15 @@ import android.os.Bundle
 import android.widget.CalendarView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.get
 import java.text.SimpleDateFormat
 import java.util.*
 
 @Suppress("DEPRECATION")
-class CalendarTrackingView : AppCompatActivity() {
+class StatusActivity : AppCompatActivity() {
     @SuppressLint("SimpleDateFormat")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_calendar_tracking_view)
+        setContentView(R.layout.activity_status)
 
         _textview = findViewById(R.id.calendar_textView)
         _calendarview = findViewById(R.id.calendarView)
