@@ -4,25 +4,63 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginHorizontal="20dp"
     tools:context=".MainActivity">
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/main_tv_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/today_s_habit"
-        android:textSize="43sp"
+        android:layout_below="@id/main_btn_calendar"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="25dp"
-         />
+        android:layout_marginBottom="30dp"
+        android:text="@string/today_s_habit"
+        android:textSize="25dp" />
 
-    <androidx.recyclerview.widget.RecyclerView
+    <TextView
+        android:id="@+id/main_tv_description_identity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/textView" />
+        android:layout_below="@id/main_tv_title"
+        android:layout_centerInParent="true"
+        android:textSize="25dp"
+        android:text="Your journey towords being: "/>
+
+    <TextView
+        android:layout_centerInParent="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/main_tv_description_identity"
+        android:id="@+id/main_tv_identity"
+        android:textStyle="bold"
+        android:layout_marginHorizontal="10dp"
+        android:textSize="28dp"
+        />
+
+    <TextView
+        android:id="@+id/main_habit_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/main_tv_identity"
+        android:text="Your Habits"
+        android:layout_marginTop="20dp"
+        android:layout_centerInParent="true"
+        android:textSize="20dp"
+        />
+
+    <ListView
+        android:id="@+id/main_listview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/main_btn_create"
+        android:layout_below="@id/main_habit_title"
+        android:layout_centerInParent="true"
+        android:layout_margin="20sp"
+        android:text="ALL HABITS.."
+        android:textSize="20sp" />
 
     <Button
-        android:id="@+id/create_button"
+        android:id="@+id/main_btn_create"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -30,6 +68,12 @@
         android:layout_marginBottom="30dp"
         android:text="@string/new_task" />
 
+    <Button
+        android:id="@+id/main_btn_calendar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:text="Calendar" />
 
 
 </RelativeLayout>
