@@ -4,4 +4,6 @@
     <string name="new_task">New Task</string>
     <string name="habit_name">Habit name</string>
     <string name="save">Save</string>
+
+    <string name="button_weekday">Button to choose the weekday</string>
 </resources>
