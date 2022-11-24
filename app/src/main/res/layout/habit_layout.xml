@@ -2,15 +2,14 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="90dp"
-    android:padding = "10dp"
+    android:layout_marginVertical="5dp"
+    android:background="@drawable/habit_background"
     android:clickable="true"
     android:longClickable="true"
-    android:background="@drawable/habit_background"
-    android:layout_marginVertical="5dp"
-    >
+    android:padding="10dp">
 
     <TextView
-        android:id="@+id/habit_name"
+        android:id="@+id/habit_tv_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
@@ -19,7 +18,7 @@
         android:textSize="20dp" />
 
     <TextView
-        android:id="@+id/habit_strike"
+        android:id="@+id/habit_tv_strike"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
@@ -28,12 +27,12 @@
         android:textSize="15dp" />
 
     <CheckBox
-        android:button="@color/dark_pink"
+        android:id="@+id/habit_cb_completion"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@id/habit_tv_strike"
         android:layout_alignParentRight="true"
-        android:layout_below="@id/habit_strike"
-        android:id="@+id/habit_completion"
-        />
+        android:button="@drawable/checkbox_icon"
+        android:onClick="completedHabitAction" />
 
 </RelativeLayout>
