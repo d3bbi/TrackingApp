@@ -4,7 +4,10 @@ import android.content.Intent
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import android.view.View
 import android.widget.Button
+import android.widget.CheckBox
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -18,6 +21,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var buttonSeeCalendar: Button
     private lateinit var initialIdentity: TextView
     private lateinit var initialName: TextView
+    private lateinit var completedCheckbox : CheckBox
 
     // variable recycler view
     private lateinit var habitRecyclerView: RecyclerView
@@ -31,30 +35,28 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         supportActionBar?.hide()
 
-        /*ADD HABITS IN THE RECYCLER VIEW*/
+        /* === ADD HABITS IN THE DATABASE === */
         val dbo = DatabaseOperations(this)
-        val cursor = dbo.getAllItems(dbo)
+        val cursor = dbo.getAllHabits(dbo)
 
         with(cursor){
             while (moveToNext()){
                 val habitName = getString(getColumnIndexOrThrow(DatabaseQueries.TableInfo.COLUMN_HABIT_NAME))
                 val habitReason = getString(getColumnIndexOrThrow(DatabaseQueries.TableInfo.COLUMN_HABIT_REASON))
                 val habitCompletion = getString(getColumnIndexOrThrow(DatabaseQueries.TableInfo.COLUMN_HABIT_COMPLETION))
-                val habitIsCompleted = if (habitCompletion.equals(0)) false else true
+                val habitIsCompleted = if (habitCompletion.toInt() == 0 ) false else true
                 val habitDate = getString(getColumnIndexOrThrow(DatabaseQueries.TableInfo.COLUMN_DATE))
 
                 habitList.add(Habit(habitName, habitReason, habitIsCompleted))
+                dbo.close()
             }
+            for (i in habitList) Log.d("HABIT", "${i.toString()}")
         }
-        habitList.add(Habit("Loundry", "Cause needs to do", false))
 
+        /* === ADD HABITS IN THE RECYCLER VIEW === */
         habitRecyclerView = findViewById(R.id.habits_recycler_view)
-
-        //specified that we want a linearLayout
         recyclerLayoutManager = LinearLayoutManager(this)
         recyclerAdapter = HabitMainAdapter(habitList, this)
-
-
         habitRecyclerView.apply {
             setHasFixedSize(true)
             layoutManager = recyclerLayoutManager
@@ -68,6 +70,7 @@ class MainActivity : AppCompatActivity() {
         buttonCreatehabit.setOnClickListener {
             val intent: Intent = Intent(this@MainActivity, CreateActivity::class.java)
             startActivity(intent)
+            finish()
         }
 
         /* START CALENDAR ACTIVITY
@@ -76,9 +79,10 @@ class MainActivity : AppCompatActivity() {
         buttonSeeCalendar.setOnClickListener {
             val intent = Intent(this@MainActivity, StatusActivity::class.java)
             startActivity(intent)
+            finish()
         }
 
-        /* SHARE INFORMATION WITH THE MAIN ACTIVITY
+        /* === SHARE INITIAL INFORMATION WITH THE MAIN ACTIVITY ===
         * Using shared preference we get the name and identity of a user*/
         initialIdentity = findViewById(R.id.main_tv_identity)
         initialName = findViewById(R.id.main_tv_title)
@@ -88,9 +92,6 @@ class MainActivity : AppCompatActivity() {
         var _name = preferences.getString("Username", "").toString()
         initialIdentity.setText(_identity)
         initialName.setText("Hi $_name")
-
-
     }
-
 
 }
