@@ -18,6 +18,12 @@ class Habit(var name: String) {
         val year = date.get(Calendar.YEAR).toString()
         val month = date.get(Calendar.MONTH).toString()
         val day = date.get(Calendar.DAY_OF_MONTH).toString()
-        return "$day/$month/$year"
+        return "$day/${month + 1}/$year"
+    }
+
+
+
+    override fun toString(): String {
+        return "$name, $reason, $isCompleted, ${getDateAsString()}"
     }
 }
