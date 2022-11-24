@@ -12,10 +12,10 @@ class DatabaseOperations(context: Context) :
     SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
     //create a companion object where to store constant variables
-        companion object {
-            const val DATABASE_NAME = "TrackerHabit.db"
-            const val DATABASE_VERSION = 1
-        }
+    companion object {
+        const val DATABASE_NAME = "TrackerHabit.db"
+        const val DATABASE_VERSION = 1
+    }
 
     /* === CREATE A TABLE === */
     // override function to create a table
@@ -30,9 +30,8 @@ class DatabaseOperations(context: Context) :
         onCreate(db)
     }
 
-
     /* === ADD ITEM IN THE TABLE === */
-    fun addItem(dbo: DatabaseOperations, habit: Habit) {
+    fun addHabit(dbo: DatabaseOperations, habit: Habit) {
         val db = dbo.writableDatabase
         val habitName = habit.name
         val habitReason = habit.reason
@@ -49,17 +48,16 @@ class DatabaseOperations(context: Context) :
 
         //data stored in a variable rowID
         val rowID = db.insert(DatabaseQueries.TableInfo.TABLE_NAME, null, contentValues)
-    }
 
+    }
 
 
     /* === RETURN ALL ITEMS OF THE TABLE === */
     // return a cursor (data will be stored as a table with columns and rows)
-    fun getAllItems(db0: DatabaseOperations): Cursor {
+    fun getAllHabits(db0: DatabaseOperations): Cursor {
         val db = db0.readableDatabase
 
         val tableProjection = arrayOf(
-            //we dont really use the ID
             BaseColumns._ID,
             DatabaseQueries.TableInfo.COLUMN_HABIT_NAME,
             DatabaseQueries.TableInfo.COLUMN_HABIT_REASON,
@@ -83,8 +81,38 @@ class DatabaseOperations(context: Context) :
             having,
             sortOrder
         )
-
         return cursor
+    }
+
+    /* === UPDATE HABIT === */
+    fun updateItem(dbo: DatabaseOperations, oldHabit: Habit, newHabit: Habit) {
+        val db = dbo.writableDatabase
+        val habitName = newHabit.name
+        val habitReason = newHabit.reason
+        val isHabitCompleted = newHabit.isCompleted
+        val habitCompletion = if (isHabitCompleted) 1 else 0
+        val itemDate = newHabit.getDateAsString()
+
+        val contentValues = ContentValues().apply {
+            put(DatabaseQueries.TableInfo.COLUMN_HABIT_NAME, habitName)
+            put(DatabaseQueries.TableInfo.COLUMN_HABIT_REASON, habitReason)
+            put(DatabaseQueries.TableInfo.COLUMN_HABIT_COMPLETION, habitCompletion)
+            put(DatabaseQueries.TableInfo.COLUMN_DATE, itemDate)
+        }
+
+        val selection = "${DatabaseQueries.TableInfo.COLUMN_HABIT_NAME} LIKE ?"
+        val selectionArgs = arrayOf(oldHabit.name)
+
+        db.update(DatabaseQueries.TableInfo.TABLE_NAME, contentValues, selection, selectionArgs)
+    }
+
+    /* === DELETE HABIT === */
+    fun deleteHabit(dbo: DatabaseOperations, habit: Habit) {
+        val db = dbo.writableDatabase
+        val selection = "${DatabaseQueries.TableInfo.COLUMN_HABIT_NAME} LIKE ?"
+        val selectionArgs = arrayOf(habit.name)
+
+        val deletedRow = db.delete(DatabaseQueries.TableInfo.TABLE_NAME, selection, selectionArgs)
     }
 
 }
