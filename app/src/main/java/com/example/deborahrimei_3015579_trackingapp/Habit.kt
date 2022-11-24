@@ -5,13 +5,13 @@ import java.util.*
 class Habit(var name: String) {
 
     var reason : String = ""
-    var priority = false
+    var isCompleted : Boolean = false
     var date = Calendar.getInstance()
 
     // build the constructor for the Habit object
-    constructor(name: String, reason: String): this(name) {
+    constructor(name: String, reason: String, isCompleted: Boolean): this(name) {
         this.reason = reason
-        this.priority = priority
+        this.isCompleted = isCompleted
     }
 
     //create a function that returns the date as a string
