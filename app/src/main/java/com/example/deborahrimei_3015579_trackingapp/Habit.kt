@@ -3,13 +3,12 @@ package com.example.deborahrimei_3015579_trackingapp
 import java.util.*
 
 class Habit(var name: String) {
-
-    var reason : String = ""
-    var isCompleted : Boolean = false
+    var reason: String = ""
+    var isCompleted: Boolean = false
     var date = Calendar.getInstance()
 
     // build the constructor for the Habit object
-    constructor(name: String, reason: String, isCompleted: Boolean): this(name) {
+    constructor(name: String, reason: String, isCompleted: Boolean) : this(name) {
         this.reason = reason
         this.isCompleted = isCompleted
     }
