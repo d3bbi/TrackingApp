@@ -5,8 +5,11 @@ import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import android.os.Build
 import android.provider.BaseColumns
-import com.example.deborahrimei_3015579_trackingapp.Habit
+import androidx.annotation.RequiresApi
+import com.example.deborahrimei_3015579_trackingapp.habits.Habit
+import com.example.deborahrimei_3015579_trackingapp.user.User
 
 class DatabaseOperations(context: Context) :
     SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
@@ -17,10 +20,11 @@ class DatabaseOperations(context: Context) :
         const val DATABASE_VERSION = 1
     }
 
-    /* === CREATE A TABLE === */
-    // override function to create a table
+    /* === CREATE TABLES === */
+    // override function to create both tables habit and user
     override fun onCreate(db: SQLiteDatabase) {
-        db.execSQL(DatabaseQueries.SQL_CREATE_TABLE_QUERY)
+        db.execSQL(DatabaseQueries.SQL_CREATE_HABIT_TABLE_QUERY)
+        db.execSQL(DatabaseQueries.SQL_CREATE_USER_TABLE_QUERY)
     }
 
     /* === UPGRADE A TABLE WITH NEW ONE === */
@@ -30,7 +34,8 @@ class DatabaseOperations(context: Context) :
         onCreate(db)
     }
 
-    /* === ADD ITEM IN THE TABLE === */
+    /* === ADD ITEM IN THE HABIT TABLE === */
+    @RequiresApi(Build.VERSION_CODES.O)
     fun addHabit(dbo: DatabaseOperations, habit: Habit) {
         val db = dbo.writableDatabase
         val habitName = habit.name
@@ -40,29 +45,27 @@ class DatabaseOperations(context: Context) :
         val habitCompletionInteger = if (habitCompletion) 1 else 0
 
         val contentValues = ContentValues().apply {
-            put(DatabaseQueries.TableInfo.COLUMN_HABIT_NAME, habitName)
-            put(DatabaseQueries.TableInfo.COLUMN_HABIT_REASON, habitReason)
-            put(DatabaseQueries.TableInfo.COLUMN_HABIT_COMPLETION, habitCompletionInteger)
-            put(DatabaseQueries.TableInfo.COLUMN_DATE, habitDate)
+            put(DatabaseQueries.HabitTable.COLUMN_HABIT_NAME, habitName)
+            put(DatabaseQueries.HabitTable.COLUMN_HABIT_REASON, habitReason)
+            put(DatabaseQueries.HabitTable.COLUMN_HABIT_COMPLETION, habitCompletionInteger)
+            put(DatabaseQueries.HabitTable.COLUMN_DATE, habitDate)
         }
 
         //data stored in a variable rowID
-        val rowID = db.insert(DatabaseQueries.TableInfo.TABLE_NAME, null, contentValues)
-
+        val rowID = db.insert(DatabaseQueries.HabitTable.TABLE_NAME, null, contentValues)
     }
 
-
-    /* === RETURN ALL ITEMS OF THE TABLE === */
+    /* === RETURN ALL ITEMS OF THE HABIT TABLE === */
     // return a cursor (data will be stored as a table with columns and rows)
-    fun getAllHabits(db0: DatabaseOperations): Cursor {
-        val db = db0.readableDatabase
+    fun getAllHabits(dbo: DatabaseOperations): Cursor {
+        val db = dbo.readableDatabase
 
         val tableProjection = arrayOf(
             BaseColumns._ID,
-            DatabaseQueries.TableInfo.COLUMN_HABIT_NAME,
-            DatabaseQueries.TableInfo.COLUMN_HABIT_REASON,
-            DatabaseQueries.TableInfo.COLUMN_HABIT_COMPLETION,
-            DatabaseQueries.TableInfo.COLUMN_DATE
+            DatabaseQueries.HabitTable.COLUMN_HABIT_NAME,
+            DatabaseQueries.HabitTable.COLUMN_HABIT_REASON,
+            DatabaseQueries.HabitTable.COLUMN_HABIT_COMPLETION,
+            DatabaseQueries.HabitTable.COLUMN_DATE
         )
 
         // cursor will need the following variables
@@ -73,7 +76,7 @@ class DatabaseOperations(context: Context) :
         val sortOrder = null
 
         val cursor = db.query(
-            DatabaseQueries.TableInfo.TABLE_NAME,
+            DatabaseQueries.HabitTable.TABLE_NAME,
             tableProjection,
             selection,
             selectionArgs,
@@ -85,34 +88,101 @@ class DatabaseOperations(context: Context) :
     }
 
     /* === UPDATE HABIT === */
-    fun updateItem(dbo: DatabaseOperations, oldHabit: Habit, newHabit: Habit) {
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun updateHabit(dbo: DatabaseOperations, oldHabit: Habit, newHabit: Habit) {
         val db = dbo.writableDatabase
         val habitName = newHabit.name
         val habitReason = newHabit.reason
         val isHabitCompleted = newHabit.isCompleted
         val habitCompletion = if (isHabitCompleted) 1 else 0
-        val itemDate = newHabit.getDateAsString()
+        val habitDate = newHabit.getDateAsString()
 
         val contentValues = ContentValues().apply {
-            put(DatabaseQueries.TableInfo.COLUMN_HABIT_NAME, habitName)
-            put(DatabaseQueries.TableInfo.COLUMN_HABIT_REASON, habitReason)
-            put(DatabaseQueries.TableInfo.COLUMN_HABIT_COMPLETION, habitCompletion)
-            put(DatabaseQueries.TableInfo.COLUMN_DATE, itemDate)
+            put(DatabaseQueries.HabitTable.COLUMN_HABIT_NAME, habitName)
+            put(DatabaseQueries.HabitTable.COLUMN_HABIT_REASON, habitReason)
+            put(DatabaseQueries.HabitTable.COLUMN_HABIT_COMPLETION, habitCompletion)
+            put(DatabaseQueries.HabitTable.COLUMN_DATE, habitDate)
         }
 
-        val selection = "${DatabaseQueries.TableInfo.COLUMN_HABIT_NAME} LIKE ?"
+        val selection = "${DatabaseQueries.HabitTable.COLUMN_HABIT_NAME} LIKE ?"
         val selectionArgs = arrayOf(oldHabit.name)
 
-        db.update(DatabaseQueries.TableInfo.TABLE_NAME, contentValues, selection, selectionArgs)
+        db.update(DatabaseQueries.HabitTable.TABLE_NAME, contentValues, selection, selectionArgs)
     }
 
     /* === DELETE HABIT === */
     fun deleteHabit(dbo: DatabaseOperations, habit: Habit) {
         val db = dbo.writableDatabase
-        val selection = "${DatabaseQueries.TableInfo.COLUMN_HABIT_NAME} LIKE ?"
+        val selection = "${DatabaseQueries.HabitTable.COLUMN_HABIT_NAME} LIKE ?"
         val selectionArgs = arrayOf(habit.name)
 
-        val deletedRow = db.delete(DatabaseQueries.TableInfo.TABLE_NAME, selection, selectionArgs)
+        val deletedRow = db.delete(DatabaseQueries.HabitTable.TABLE_NAME, selection, selectionArgs)
+    }
+
+    /* === ADD ITEM IN THE USER TABLE === */
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun addUser(dbo: DatabaseOperations, user: User) {
+        val db = dbo.writableDatabase
+        val userName = user.name
+        val userReason = user.identity
+        val userPicture = user.picture
+        val userNumbHabits = user.totalHabit
+        val userTotalCompleted = user.totalCompleted
+        val userDate = user.getDateAsString()
+
+        val contentValues = ContentValues().apply {
+            put(DatabaseQueries.UserTable.COLUMN_USER_NAME, userName)
+            put(DatabaseQueries.UserTable.COLUMN_USER_IDENTITY, userReason)
+            put(DatabaseQueries.UserTable.COLUMN_USER_PICTURE, userPicture)
+            put(DatabaseQueries.UserTable.COLUMN_USER_NUMB_HABITS, userNumbHabits)
+            put(DatabaseQueries.UserTable.COLUMN_USER_TOTAL_COMPLETED, userTotalCompleted)
+            put(DatabaseQueries.UserTable.COLUMN_USER_DATE, userDate)
+        }
+
+        //data stored in a variable rowID
+        db.insert(DatabaseQueries.UserTable.TABLE_USER_NAME, null, contentValues)
+    }
+
+    /* === UPDATE USER === */
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun updateUser(dbo: DatabaseOperations, user: User) {
+        val db = dbo.writableDatabase
+        db.delete(DatabaseQueries.UserTable.TABLE_USER_NAME, null, null)
+        dbo.addUser(dbo, user)
+    }
+
+    /* === RETURN ALL ITEMS OF THE USER TABLE === */
+    // return a cursor (data will be stored as a table with columns and rows)
+    fun getUser(dbo: DatabaseOperations): Cursor {
+        val db = dbo.writableDatabase
+
+        val tableProjection = arrayOf(
+            BaseColumns._ID,
+            DatabaseQueries.UserTable.COLUMN_USER_NAME,
+            DatabaseQueries.UserTable.COLUMN_USER_IDENTITY,
+            DatabaseQueries.UserTable.COLUMN_USER_PICTURE,
+            DatabaseQueries.UserTable.COLUMN_USER_NUMB_HABITS,
+            DatabaseQueries.UserTable.COLUMN_USER_TOTAL_COMPLETED,
+            DatabaseQueries.UserTable.COLUMN_USER_DATE
+        )
+
+        // cursor will need the following variables
+        val selection = ""
+        val selectionArgs = null
+        val groupBy = null
+        val having = null
+        val sortOrder = null
+
+        val cursor = db.query(
+            DatabaseQueries.UserTable.TABLE_USER_NAME,
+            tableProjection,
+            selection,
+            selectionArgs,
+            groupBy,
+            having,
+            sortOrder
+        )
+        return cursor
     }
 
 }
