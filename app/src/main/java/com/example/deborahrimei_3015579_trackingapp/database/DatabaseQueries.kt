@@ -11,7 +11,10 @@ object DatabaseQueries {
                 "${HabitTable.COLUMN_HABIT_NAME} TEXT," +
                 "${HabitTable.COLUMN_HABIT_REASON} TEXT," +
                 "${HabitTable.COLUMN_HABIT_COMPLETION} INTEGER," +
-                "${HabitTable.COLUMN_DATE} TEXT" + ")"
+                "${HabitTable.COLUMN_HABIT_PERIOD_YEAR} INTEGER," +
+                "${HabitTable.COLUMN_HABIT_PERIOD_MONTH} INTEGER," +
+                "${HabitTable.COLUMN_HABIT_PERIOD_DAY} INTEGER," +
+                "${HabitTable.COLUMN_HABIT_CREATION_DATE} TEXT" + ")"
 
     // query that will delete the table
     const val SQL_DELETE_TABLE_QUERY = "DROP TABLE IF EXISTS ${HabitTable.TABLE_NAME}"
@@ -22,7 +25,10 @@ object DatabaseQueries {
         const val COLUMN_HABIT_NAME = "habitName"
         const val COLUMN_HABIT_REASON = "habitReason"
         const val COLUMN_HABIT_COMPLETION = "habitCompletion"
-        const val COLUMN_DATE = "habitDate"
+        const val COLUMN_HABIT_PERIOD_YEAR = "habitPeriodYear"
+        const val COLUMN_HABIT_PERIOD_MONTH = "habitPeriodMonth"
+        const val COLUMN_HABIT_PERIOD_DAY = "habitPeriodDay"
+        const val COLUMN_HABIT_CREATION_DATE = "habitDate"
     }
 
     // query that will initiliase the table
