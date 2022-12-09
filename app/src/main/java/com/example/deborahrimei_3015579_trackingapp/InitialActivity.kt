@@ -2,13 +2,19 @@ package com.example.deborahrimei_3015579_trackingapp
 
 import android.content.Intent
 import android.content.SharedPreferences
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import androidx.annotation.RequiresApi
+import com.example.deborahrimei_3015579_trackingapp.database.DatabaseOperations
+import com.example.deborahrimei_3015579_trackingapp.user.User
 
 class InitialActivity : AppCompatActivity() {
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_initial)
@@ -36,13 +42,19 @@ class InitialActivity : AppCompatActivity() {
 
             //when the button is clicked, the next activity will be displayed (Main)
             initial_button.setOnClickListener {
-                val msg: String = initial_name.text.toString()
+                var username: String = initial_name.text.toString()
+                var identity: String = initial_identity.text.toString()
 
                 //if the EditText are not empty, pass the message in the SharedPreferences
-                if (msg.trim().isNotBlank() || msg.trim().isNotEmpty()) {
+                if (username.trim().isNotBlank() || username.trim().isNotEmpty()) {
                     Intent(this@InitialActivity, MainActivity::class.java).also {
-                        editor.putString("Username", initial_name.text.toString())
-                        editor.putString("Identity", initial_identity.text.toString())
+                        editor.putString("Username", username)
+                        editor.putString("Identity", identity)
+
+                        val dbo = DatabaseOperations(this)
+                        var user = User(username, identity, "Pic".toByteArray(), 0, 0)
+                        dbo.addUser(dbo, user)
+                        dbo.close()
                         editor.commit()
                         startActivity(it)
                         finish()
