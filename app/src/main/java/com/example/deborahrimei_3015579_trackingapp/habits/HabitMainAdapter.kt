@@ -9,14 +9,10 @@ import android.widget.CheckBox
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.annotation.RequiresApi
-import androidx.core.view.get
-import androidx.core.view.indices
 import androidx.recyclerview.widget.RecyclerView
 import com.example.deborahrimei_3015579_trackingapp.MainActivity
 import com.example.deborahrimei_3015579_trackingapp.R
 import com.example.deborahrimei_3015579_trackingapp.database.DatabaseOperations
-import kotlinx.coroutines.NonDisposableHandle
-import kotlinx.coroutines.NonDisposableHandle.parent
 
 class HabitMainAdapter(private val habitList: ArrayList<Habit>, val activity: MainActivity) :
     RecyclerView.Adapter<HabitMainAdapter.ViewHolder>() {
@@ -26,25 +22,25 @@ class HabitMainAdapter(private val habitList: ArrayList<Habit>, val activity: Ma
     }
 
     // this function will return the View in the activity
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val habitLayout = LayoutInflater.from(parent.context)
             .inflate(R.layout.habit_layout, parent, false) as RelativeLayout
 
-
         /* === EDIT HABIT WHEN CLICKED === */
         habitLayout.setOnClickListener {
             val index = parent.indexOfChild(it)
-            Log.d("INDEX", "EDIT ${parent.indexOfChild(it)}")
             val intent: Intent = Intent(parent.context, CreateHabitActivity::class.java)
             intent.putExtra("HabitNameExtra", habitList.get(index).name)
             intent.putExtra("HabitReasonExtra", habitList.get(index).reason)
+            intent.putExtra("HabitPeriodExtra", habitList.get(index).period.toString())
+            intent.putExtra("HabitCreationDateExtra", habitList.get(index).creationDate)
             parent.context.startActivity(intent)
         }
 
         /* === DELETE HABIT WHEN LONG CLICKED === */
         habitLayout.setOnLongClickListener {
             val position: Int = parent.indexOfChild(it)
-            Log.d("INDEX", "DELETE ${parent.indexOfChild(it)}")
             val dbo = DatabaseOperations(parent.context)
             val habitToRemove = habitList[position]
 
